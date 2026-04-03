@@ -1,0 +1,90 @@
+import { useEffect } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { useQuery } from 'urql'
+import AppButton from '@/components/AppButton'
+import { handleImageError } from '@/lib/image'
+import { LOCATION_DETAIL_QUERY } from '@/lib/queries'
+import { useFavoritesStore } from '@/stores/favorites'
+
+type Resident = {
+  id: string
+  name: string
+  image: string
+  species: string
+  status: string
+}
+
+type LocationDetail = {
+  id: string
+  name: string
+  type: string
+  dimension: string
+  residents: Resident[]
+}
+
+type LocationDetailData = {
+  location?: LocationDetail
+}
+
+export default function LocationDetailPage() {
+  const { id = '' } = useParams<{ id: string }>()
+  const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
+  const toggleFavorite = useFavoritesStore((state) => state.toggle)
+  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+
+  useEffect(() => {
+    hydrateFavorites()
+  }, [hydrateFavorites])
+
+  const [{ data, fetching, error }] = useQuery<LocationDetailData>({
+    query: LOCATION_DETAIL_QUERY,
+    variables: { id },
+  })
+
+  const location = data?.location
+
+  return (
+    <section>
+      {fetching ? <p className="hint">Loading location...</p> : null}
+      {!fetching && error ? <p className="error">Unable to load this location.</p> : null}
+
+      {location ? (
+        <article className="card">
+          <h1>{location.name}</h1>
+          <p className="meta">Type: {location.type || 'Unknown'}</p>
+          <p className="meta">Dimension: {location.dimension || 'Unknown'}</p>
+          <p className="meta">Residents: {location.residents.length}</p>
+          <AppButton
+            variant="secondary"
+            onClick={() =>
+              toggleFavorite({
+                id: location.id,
+                kind: 'location',
+                name: location.name,
+                subtitle: `${location.type || 'Unknown'} - ${location.dimension || 'Unknown'}`,
+              })
+            }
+          >
+            {isFavorite(location.id, 'location') ? 'Unfavorite' : 'Favorite'}
+          </AppButton>
+
+          <h2>Residents</h2>
+          <div className="grid">
+            {location.residents.map((resident) => (
+              <article key={resident.id} className="card resident">
+                <Link className="image-link" to={`/character/${resident.id}`} aria-label={`Open ${resident.name}`}>
+                  <img src={resident.image} alt={resident.name} loading="lazy" decoding="async" onError={handleImageError} />
+                </Link>
+                <h3>{resident.name}</h3>
+                <p className="meta">
+                  {resident.species} - {resident.status}
+                </p>
+                <AppButton to={`/character/${resident.id}`}>Open</AppButton>
+              </article>
+            ))}
+          </div>
+        </article>
+      ) : null}
+    </section>
+  )
+}
