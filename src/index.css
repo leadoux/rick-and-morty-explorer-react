@@ -9,6 +9,7 @@
   --accent: #0853ab;
   --accent-soft: #c8defa;
   --accent-soft-text: #082f5f;
+  --button-primary-text: #ffffff;
   --border: #bccde1;
   --danger: #b32141;
 }
@@ -23,6 +24,7 @@
   --accent: #8cc2ff;
   --accent-soft: #263a56;
   --accent-soft-text: #ebf4ff;
+  --button-primary-text: #0d1b2f;
   --border: #38506a;
   --danger: #ff87a3;
 }
@@ -205,7 +207,7 @@ h3 {
   padding: 0.45rem 0.7rem;
   text-decoration: none;
   background: var(--accent);
-  color: white;
+  color: var(--button-primary-text);
   cursor: pointer;
   font-size: 0.95rem;
 }
