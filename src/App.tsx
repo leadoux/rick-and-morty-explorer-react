@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
 import AppHeader from '@/components/AppHeader'
 import { useDocumentMeta } from '@/hooks/useDocumentMeta'
@@ -26,10 +26,12 @@ import NotFoundPage from '@/pages/NotFoundPage'
 
 export default function App() {
   const location = useLocation()
+  const pathname = location.pathname
+  const mainContentRef = useRef<HTMLElement | null>(null)
+  const routeAnnouncementRef = useRef<HTMLParagraphElement | null>(null)
+  const hasNavigated = useRef(false)
 
   const routeMeta = useMemo(() => {
-    const { pathname } = location
-
     if (pathname === '/characters' || pathname === '/') {
       return {
         title: 'Characters | Rick and Morty Explorer',
@@ -83,17 +85,39 @@ export default function App() {
       title: 'Page Not Found | Rick and Morty Explorer',
       description: notFoundPageDescription,
     }
-  }, [location])
+  }, [pathname])
 
   useDocumentMeta(routeMeta ?? { title: 'Rick and Morty Explorer', description: defaultSiteDescription })
 
+  useEffect(() => {
+    if (!hasNavigated.current) {
+      hasNavigated.current = true
+      return
+    }
+
+    if (routeAnnouncementRef.current) {
+      routeAnnouncementRef.current.textContent = routeMeta.title
+    }
+
+    requestAnimationFrame(() => {
+      const heading = mainContentRef.current?.querySelector('h1')
+      if (heading instanceof HTMLElement) {
+        heading.setAttribute('tabindex', '-1')
+        heading.focus()
+        return
+      }
+      mainContentRef.current?.focus()
+    })
+  }, [pathname, routeMeta.title])
+
   return (
-    <>
+    <div className="app-shell">
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
+      <p ref={routeAnnouncementRef} className="sr-only" role="status" aria-live="polite" aria-atomic="true" />
       <AppHeader />
-      <main id="main-content" className="layout">
+      <main id="main-content" ref={mainContentRef} className="layout" tabIndex={-1}>
         <Routes>
           <Route path="/" element={<Navigate to="/characters" replace />} />
           <Route path="/characters" element={<CharactersPage />} />
@@ -107,6 +131,6 @@ export default function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </main>
-    </>
+    </div>
   )
 }

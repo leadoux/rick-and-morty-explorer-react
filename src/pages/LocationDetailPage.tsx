@@ -53,8 +53,16 @@ export default function LocationDetailPage() {
 
   return (
     <section>
-      {fetching ? <p className="hint">Loading location...</p> : null}
-      {!fetching && error ? <p className="error">Unable to load this location.</p> : null}
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading location...
+        </p>
+      ) : null}
+      {!fetching && error ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load this location.
+        </p>
+      ) : null}
 
       {location ? (
         <article className="card">

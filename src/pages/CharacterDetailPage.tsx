@@ -40,8 +40,16 @@ export default function CharacterDetailPage() {
 
   return (
     <section>
-      {fetching ? <p className="hint">Loading character...</p> : null}
-      {!fetching && error ? <p className="error">Unable to load this character.</p> : null}
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading character...
+        </p>
+      ) : null}
+      {!fetching && error ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load this character.
+        </p>
+      ) : null}
 
       {character ? (
         <article className="card detail">

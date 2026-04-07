@@ -57,8 +57,16 @@ export default function EpisodeDetailPage() {
 
   return (
     <section>
-      {fetching ? <p className="hint">Loading episode...</p> : null}
-      {!fetching && error ? <p className="error">Unable to load this episode.</p> : null}
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading episode...
+        </p>
+      ) : null}
+      {!fetching && error ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load this episode.
+        </p>
+      ) : null}
 
       {episode ? (
         <article className="card">
