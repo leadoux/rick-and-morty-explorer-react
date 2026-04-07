@@ -13,8 +13,11 @@ import NotFoundPage from '@/pages/NotFoundPage'
 export default function App() {
   return (
     <>
+      <a className="skip-link" href="#main-content">
+        Skip to main content
+      </a>
       <AppHeader />
-      <main className="layout">
+      <main id="main-content" className="layout">
         <Routes>
           <Route path="/" element={<Navigate to="/characters" replace />} />
           <Route path="/characters" element={<CharactersPage />} />

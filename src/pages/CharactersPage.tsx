@@ -96,20 +96,49 @@ export default function CharactersPage() {
       <p className="description">Browse every character with URL-synced filters and compare-ready cards.</p>
 
       <div className="card filters">
-        <input className="input" placeholder="Name" value={filters.name} onChange={(event) => setFilter('name', event.target.value)} />
-        <select className="input" value={filters.status} onChange={(event) => setFilter('status', event.target.value)}>
+        <label className="sr-only" htmlFor="characters-filter-name">
+          Filter characters by name
+        </label>
+        <input
+          id="characters-filter-name"
+          className="input"
+          placeholder="Name"
+          value={filters.name}
+          onChange={(event) => setFilter('name', event.target.value)}
+        />
+        <label className="sr-only" htmlFor="characters-filter-status">
+          Filter characters by status
+        </label>
+        <select
+          id="characters-filter-status"
+          className="input"
+          value={filters.status}
+          onChange={(event) => setFilter('status', event.target.value)}
+        >
           <option value="">Any status</option>
           <option value="alive">Alive</option>
           <option value="dead">Dead</option>
           <option value="unknown">Unknown</option>
         </select>
+        <label className="sr-only" htmlFor="characters-filter-species">
+          Filter characters by species
+        </label>
         <input
+          id="characters-filter-species"
           className="input"
           placeholder="Species"
           value={filters.species}
           onChange={(event) => setFilter('species', event.target.value)}
         />
-        <select className="input" value={filters.gender} onChange={(event) => setFilter('gender', event.target.value)}>
+        <label className="sr-only" htmlFor="characters-filter-gender">
+          Filter characters by gender
+        </label>
+        <select
+          id="characters-filter-gender"
+          className="input"
+          value={filters.gender}
+          onChange={(event) => setFilter('gender', event.target.value)}
+        >
           <option value="">Any gender</option>
           <option value="female">Female</option>
           <option value="male">Male</option>
