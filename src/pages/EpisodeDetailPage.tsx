@@ -33,8 +33,9 @@ export default function EpisodeDetailPage() {
   const { id = '' } = useParams<{ id: string }>()
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleEpisode = useCompareStore((state) => state.toggleEpisode)
+  const isEpisodeCompared = useCompareStore((state) => state.isEpisodeCompared)
 
   useEffect(() => {
     hydrateFavorites()
@@ -46,6 +47,8 @@ export default function EpisodeDetailPage() {
   })
 
   const episode = data?.episode
+  const isInCompare = episode ? isEpisodeCompared(episode.id) : false
+  const isEpisodeFavorite = episode ? favoriteItems.some((item) => item.id === episode.id && item.kind === 'episode') : false
   const pageHeading = episode ? `${episode.episode} - ${episode.name}` : 'Episode details'
   useDocumentMeta({
     title: episode?.name
@@ -87,10 +90,12 @@ export default function EpisodeDetailPage() {
                 })
               }
             >
-              {isFavorite(episode.id, 'episode') ? 'Unfavorite' : 'Favorite'}
+              {isEpisodeFavorite ? 'Unfavorite' : 'Favorite'}
             </AppButton>
             <AppButton
               variant="secondary"
+              aria-pressed={isInCompare}
+              aria-label={`${isInCompare ? 'Remove' : 'Add'} ${episode.name} ${isInCompare ? 'from' : 'to'} compare`}
               onClick={() =>
                 toggleEpisode({
                   id: episode.id,
@@ -100,7 +105,7 @@ export default function EpisodeDetailPage() {
                 })
               }
             >
-              Compare
+              {isInCompare ? 'Compared' : 'Compare'}
             </AppButton>
           </div>
 

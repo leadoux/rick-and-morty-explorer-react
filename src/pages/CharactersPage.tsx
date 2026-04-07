@@ -36,8 +36,9 @@ type CharactersQueryData = {
 export default function CharactersPage() {
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleCharacter = useCompareStore((state) => state.toggleCharacter)
+  const isCharacterCompared = useCompareStore((state) => state.isCharacterCompared)
 
   useEffect(() => {
     hydrateFavorites()
@@ -180,56 +181,62 @@ export default function CharactersPage() {
       {!fetching && characters.length ? (
         <div className="grid">
           <h2 className="section-heading">Character results ({totalCount})</h2>
-          {characters.map((character) => (
-            <article key={character.id} className="card">
-              <Link className="image-link" to={`/character/${character.id}`} aria-label={`Open ${character.name}`}>
-                <img
-                  src={character.image}
-                  alt={character.name}
-                  className="avatar"
-                  loading="lazy"
-                  decoding="async"
-                  onError={handleImageError}
-                />
-              </Link>
-              <h3>{character.name}</h3>
-              <p className="meta">
-                {character.species} - {character.status}
-              </p>
-              <p className="meta">Origin: {character.origin?.name || 'Unknown'}</p>
-              <div className="row">
-                <AppButton to={`/character/${character.id}`}>Open</AppButton>
-                <AppButton
-                  variant="secondary"
-                  onClick={() =>
-                    toggleFavorite({
-                      id: character.id,
-                      kind: 'character',
-                      name: character.name,
-                      subtitle: `${character.species} - ${character.status}`,
-                      image: character.image,
-                    })
-                  }
-                >
-                  {isFavorite(character.id, 'character') ? 'Unfavorite' : 'Favorite'}
-                </AppButton>
-                <AppButton
-                  variant="secondary"
-                  onClick={() =>
-                    toggleCharacter({
-                      id: character.id,
-                      name: character.name,
-                      image: character.image,
-                      status: character.status,
-                      species: character.species,
-                    })
-                  }
-                >
-                  Compare
-                </AppButton>
-              </div>
-            </article>
-          ))}
+          {characters.map((character) => {
+            const inCompare = isCharacterCompared(character.id)
+            const isCharacterFavorite = favoriteItems.some((item) => item.id === character.id && item.kind === 'character')
+            return (
+              <article key={character.id} className="card">
+                <Link className="image-link" to={`/character/${character.id}`} aria-label={`Open ${character.name}`}>
+                  <img
+                    src={character.image}
+                    alt={character.name}
+                    className="avatar"
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
+                  />
+                </Link>
+                <h3>{character.name}</h3>
+                <p className="meta">
+                  {character.species} - {character.status}
+                </p>
+                <p className="meta">Origin: {character.origin?.name || 'Unknown'}</p>
+                <div className="row">
+                  <AppButton to={`/character/${character.id}`}>Open</AppButton>
+                  <AppButton
+                    variant="secondary"
+                    onClick={() =>
+                      toggleFavorite({
+                        id: character.id,
+                        kind: 'character',
+                        name: character.name,
+                        subtitle: `${character.species} - ${character.status}`,
+                        image: character.image,
+                      })
+                    }
+                  >
+                    {isCharacterFavorite ? 'Unfavorite' : 'Favorite'}
+                  </AppButton>
+                  <AppButton
+                    variant="secondary"
+                    aria-pressed={inCompare}
+                    aria-label={`${inCompare ? 'Remove' : 'Add'} ${character.name} ${inCompare ? 'from' : 'to'} compare`}
+                    onClick={() =>
+                      toggleCharacter({
+                        id: character.id,
+                        name: character.name,
+                        image: character.image,
+                        status: character.status,
+                        species: character.species,
+                      })
+                    }
+                  >
+                    {inCompare ? 'Compared' : 'Compare'}
+                  </AppButton>
+                </div>
+              </article>
+            )
+          })}
         </div>
       ) : null}
 

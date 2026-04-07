@@ -18,8 +18,9 @@ export default function CharacterDetailPage() {
   const { id = '' } = useParams<{ id: string }>()
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleCharacter = useCompareStore((state) => state.toggleCharacter)
+  const isCharacterCompared = useCompareStore((state) => state.isCharacterCompared)
 
   useEffect(() => {
     hydrateFavorites()
@@ -31,6 +32,10 @@ export default function CharacterDetailPage() {
   })
 
   const character = data?.character
+  const isInCompare = character ? isCharacterCompared(character.id) : false
+  const isCharacterFavorite = character
+    ? favoriteItems.some((item) => item.id === character.id && item.kind === 'character')
+    : false
   const pageHeading = character?.name ?? 'Character details'
   useDocumentMeta({
     title: character?.name ? `${character.name} | Rick and Morty Explorer` : 'Character Details | Rick and Morty Explorer',
@@ -76,10 +81,12 @@ export default function CharacterDetailPage() {
                   })
                 }
               >
-                {isFavorite(character.id, 'character') ? 'Unfavorite' : 'Favorite'}
+                {isCharacterFavorite ? 'Unfavorite' : 'Favorite'}
               </AppButton>
               <AppButton
                 variant="secondary"
+                aria-pressed={isInCompare}
+                aria-label={`${isInCompare ? 'Remove' : 'Add'} ${character.name} ${isInCompare ? 'from' : 'to'} compare`}
                 onClick={() =>
                   toggleCharacter({
                     id: character.id,
@@ -90,7 +97,7 @@ export default function CharacterDetailPage() {
                   })
                 }
               >
-                Compare
+                {isInCompare ? 'Compared' : 'Compare'}
               </AppButton>
             </div>
 

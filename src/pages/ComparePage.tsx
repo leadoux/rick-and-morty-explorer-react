@@ -11,7 +11,6 @@ export default function ComparePage() {
   const canCompareCharacters = useCompareStore((state) => state.canCompareCharacters)
   const canCompareEpisodes = useCompareStore((state) => state.canCompareEpisodes)
 
-  const canCompare = tab === 'characters' ? canCompareCharacters : canCompareEpisodes
   const isCharactersTab = tab === 'characters'
   const setActiveTab = (nextTab: 'characters' | 'episodes') => {
     setTab(nextTab)
@@ -72,34 +71,32 @@ export default function ComparePage() {
         </AppButton>
       </div>
 
-      {!canCompare ? (
-        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
-          Add two {tab} to start comparing.
-        </p>
-      ) : null}
-
       <div
         id="compare-panel-characters"
         className="compare-grid"
         role="tabpanel"
         aria-labelledby="compare-tab-characters"
-        hidden={!isCharactersTab || !canCompareCharacters}
+        hidden={!isCharactersTab}
       >
         {canCompareCharacters ? (
           <>
-          <h2 className="section-heading">Character comparison ({characters.length})</h2>
-          {characters.map((character) => (
-            <article key={character.id} className="card">
-              <Link className="image-link" to={`/character/${character.id}`} aria-label={`Open ${character.name}`}>
-                <img src={character.image} alt={character.name} loading="lazy" decoding="async" onError={handleImageError} />
-              </Link>
-              <h3>{character.name}</h3>
-              <p className="meta">Status: {character.status}</p>
-              <p className="meta">Species: {character.species}</p>
-            </article>
-          ))}
+            <h2 className="section-heading">Character comparison ({characters.length})</h2>
+            {characters.map((character) => (
+              <article key={character.id} className="card">
+                <Link className="image-link" to={`/character/${character.id}`} aria-label={`Open ${character.name}`}>
+                  <img src={character.image} alt={character.name} loading="lazy" decoding="async" onError={handleImageError} />
+                </Link>
+                <h3>{character.name}</h3>
+                <p className="meta">Status: {character.status}</p>
+                <p className="meta">Species: {character.species}</p>
+              </article>
+            ))}
           </>
-        ) : null}
+        ) : (
+          <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+            Add two characters to start comparing.
+          </p>
+        )}
       </div>
 
       <div
@@ -107,20 +104,24 @@ export default function ComparePage() {
         className="compare-grid"
         role="tabpanel"
         aria-labelledby="compare-tab-episodes"
-        hidden={isCharactersTab || !canCompareEpisodes}
+        hidden={isCharactersTab}
       >
         {canCompareEpisodes ? (
           <>
-          <h2 className="section-heading">Episode comparison ({episodes.length})</h2>
-          {episodes.map((episode) => (
-            <article key={episode.id} className="card">
-              <h3>{episode.name}</h3>
-              <p className="meta">Episode: {episode.episode}</p>
-              <p className="meta">Air date: {episode.air_date}</p>
-            </article>
-          ))}
+            <h2 className="section-heading">Episode comparison ({episodes.length})</h2>
+            {episodes.map((episode) => (
+              <article key={episode.id} className="card">
+                <h3>{episode.name}</h3>
+                <p className="meta">Episode: {episode.episode}</p>
+                <p className="meta">Air date: {episode.air_date}</p>
+              </article>
+            ))}
           </>
-        ) : null}
+        ) : (
+          <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+            Add two episodes to start comparing.
+          </p>
+        )}
       </div>
     </section>
   )

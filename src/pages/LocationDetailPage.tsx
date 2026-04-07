@@ -32,7 +32,7 @@ export default function LocationDetailPage() {
   const { id = '' } = useParams<{ id: string }>()
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
 
   useEffect(() => {
     hydrateFavorites()
@@ -45,6 +45,9 @@ export default function LocationDetailPage() {
 
   const location = data?.location
   const pageHeading = location?.name ?? 'Location details'
+  const isLocationFavorite = location
+    ? favoriteItems.some((item) => item.id === location.id && item.kind === 'location')
+    : false
   useDocumentMeta({
     title: location?.name ? `${location.name} | Rick and Morty Explorer` : 'Location Details | Rick and Morty Explorer',
     description: location
@@ -82,7 +85,7 @@ export default function LocationDetailPage() {
               })
             }
           >
-            {isFavorite(location.id, 'location') ? 'Unfavorite' : 'Favorite'}
+            {isLocationFavorite ? 'Unfavorite' : 'Favorite'}
           </AppButton>
 
           <h2>Residents</h2>

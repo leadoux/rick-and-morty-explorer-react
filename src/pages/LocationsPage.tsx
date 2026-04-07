@@ -29,7 +29,7 @@ type LocationsQueryData = {
 export default function LocationsPage() {
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
 
   useEffect(() => {
     hydrateFavorites()
@@ -142,30 +142,33 @@ export default function LocationsPage() {
       {!fetching && locations.length ? (
         <div className="grid">
           <h2 className="section-heading">Location results ({totalCount})</h2>
-          {locations.map((location) => (
-            <article key={location.id} className="card">
-              <h3>{location.name}</h3>
-              <p className="meta">Type: {location.type || 'Unknown'}</p>
-              <p className="meta">Dimension: {location.dimension || 'Unknown'}</p>
-              <p className="meta">Residents: {location.residents.length}</p>
-              <div className="row">
-                <AppButton to={`/location/${location.id}`}>Open</AppButton>
-                <AppButton
-                  variant="secondary"
-                  onClick={() =>
-                    toggleFavorite({
-                      id: location.id,
-                      kind: 'location',
-                      name: location.name,
-                      subtitle: `${location.type || 'Unknown'} - ${location.dimension || 'Unknown'}`,
-                    })
-                  }
-                >
-                  {isFavorite(location.id, 'location') ? 'Unfavorite' : 'Favorite'}
-                </AppButton>
-              </div>
-            </article>
-          ))}
+          {locations.map((location) => {
+            const isLocationFavorite = favoriteItems.some((item) => item.id === location.id && item.kind === 'location')
+            return (
+              <article key={location.id} className="card">
+                <h3>{location.name}</h3>
+                <p className="meta">Type: {location.type || 'Unknown'}</p>
+                <p className="meta">Dimension: {location.dimension || 'Unknown'}</p>
+                <p className="meta">Residents: {location.residents.length}</p>
+                <div className="row">
+                  <AppButton to={`/location/${location.id}`}>Open</AppButton>
+                  <AppButton
+                    variant="secondary"
+                    onClick={() =>
+                      toggleFavorite({
+                        id: location.id,
+                        kind: 'location',
+                        name: location.name,
+                        subtitle: `${location.type || 'Unknown'} - ${location.dimension || 'Unknown'}`,
+                      })
+                    }
+                  >
+                    {isLocationFavorite ? 'Unfavorite' : 'Favorite'}
+                  </AppButton>
+                </div>
+              </article>
+            )
+          })}
         </div>
       ) : null}
 

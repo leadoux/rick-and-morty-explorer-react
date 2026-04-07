@@ -30,8 +30,9 @@ type EpisodesQueryData = {
 export default function EpisodesPage() {
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleEpisode = useCompareStore((state) => state.toggleEpisode)
+  const isEpisodeCompared = useCompareStore((state) => state.isEpisodeCompared)
 
   useEffect(() => {
     hydrateFavorites()
@@ -132,44 +133,50 @@ export default function EpisodesPage() {
       {!fetching && episodes.length ? (
         <div className="grid">
           <h2 className="section-heading">Episode results ({totalCount})</h2>
-          {episodes.map((episode) => (
-            <article key={episode.id} className="card">
-              <h3>
-                {episode.episode} - {episode.name}
-              </h3>
-              <p className="meta">Air date: {episode.air_date}</p>
-              <p className="meta">Characters: {episode.characters.length}</p>
-              <div className="row">
-                <AppButton to={`/episode/${episode.id}`}>Open</AppButton>
-                <AppButton
-                  variant="secondary"
-                  onClick={() =>
-                    toggleFavorite({
-                      id: episode.id,
-                      kind: 'episode',
-                      name: episode.name,
-                      subtitle: `${episode.episode} - ${episode.air_date}`,
-                    })
-                  }
-                >
-                  {isFavorite(episode.id, 'episode') ? 'Unfavorite' : 'Favorite'}
-                </AppButton>
-                <AppButton
-                  variant="secondary"
-                  onClick={() =>
-                    toggleEpisode({
-                      id: episode.id,
-                      name: episode.name,
-                      episode: episode.episode,
-                      air_date: episode.air_date,
-                    })
-                  }
-                >
-                  Compare
-                </AppButton>
-              </div>
-            </article>
-          ))}
+          {episodes.map((episode) => {
+            const inCompare = isEpisodeCompared(episode.id)
+            const isEpisodeFavorite = favoriteItems.some((item) => item.id === episode.id && item.kind === 'episode')
+            return (
+              <article key={episode.id} className="card">
+                <h3>
+                  {episode.episode} - {episode.name}
+                </h3>
+                <p className="meta">Air date: {episode.air_date}</p>
+                <p className="meta">Characters: {episode.characters.length}</p>
+                <div className="row">
+                  <AppButton to={`/episode/${episode.id}`}>Open</AppButton>
+                  <AppButton
+                    variant="secondary"
+                    onClick={() =>
+                      toggleFavorite({
+                        id: episode.id,
+                        kind: 'episode',
+                        name: episode.name,
+                        subtitle: `${episode.episode} - ${episode.air_date}`,
+                      })
+                    }
+                  >
+                    {isEpisodeFavorite ? 'Unfavorite' : 'Favorite'}
+                  </AppButton>
+                  <AppButton
+                    variant="secondary"
+                    aria-pressed={inCompare}
+                    aria-label={`${inCompare ? 'Remove' : 'Add'} ${episode.name} ${inCompare ? 'from' : 'to'} compare`}
+                    onClick={() =>
+                      toggleEpisode({
+                        id: episode.id,
+                        name: episode.name,
+                        episode: episode.episode,
+                        air_date: episode.air_date,
+                      })
+                    }
+                  >
+                    {inCompare ? 'Compared' : 'Compare'}
+                  </AppButton>
+                </div>
+              </article>
+            )
+          })}
         </div>
       ) : null}
 
