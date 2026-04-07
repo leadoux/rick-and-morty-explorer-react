@@ -78,13 +78,15 @@ export default function ComparePage() {
         </p>
       ) : null}
 
-      {canCompare && tab === 'characters' ? (
-        <div
-          id="compare-panel-characters"
-          className="compare-grid"
-          role="tabpanel"
-          aria-labelledby="compare-tab-characters"
-        >
+      <div
+        id="compare-panel-characters"
+        className="compare-grid"
+        role="tabpanel"
+        aria-labelledby="compare-tab-characters"
+        hidden={!isCharactersTab || !canCompareCharacters}
+      >
+        {canCompareCharacters ? (
+          <>
           <h2 className="section-heading">Character comparison ({characters.length})</h2>
           {characters.map((character) => (
             <article key={character.id} className="card">
@@ -96,11 +98,19 @@ export default function ComparePage() {
               <p className="meta">Species: {character.species}</p>
             </article>
           ))}
-        </div>
-      ) : null}
+          </>
+        ) : null}
+      </div>
 
-      {canCompare && tab === 'episodes' ? (
-        <div id="compare-panel-episodes" className="compare-grid" role="tabpanel" aria-labelledby="compare-tab-episodes">
+      <div
+        id="compare-panel-episodes"
+        className="compare-grid"
+        role="tabpanel"
+        aria-labelledby="compare-tab-episodes"
+        hidden={isCharactersTab || !canCompareEpisodes}
+      >
+        {canCompareEpisodes ? (
+          <>
           <h2 className="section-heading">Episode comparison ({episodes.length})</h2>
           {episodes.map((episode) => (
             <article key={episode.id} className="card">
@@ -109,8 +119,9 @@ export default function ComparePage() {
               <p className="meta">Air date: {episode.air_date}</p>
             </article>
           ))}
-        </div>
-      ) : null}
+          </>
+        ) : null}
+      </div>
     </section>
   )
 }
