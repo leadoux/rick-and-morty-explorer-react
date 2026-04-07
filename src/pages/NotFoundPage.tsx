@@ -4,7 +4,9 @@ export default function NotFoundPage() {
   return (
     <section className="card">
       <h1>Page Not Found</h1>
-      <p className="hint">The route does not exist. Return to the main explorer pages.</p>
+      <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+        The route does not exist. Return to the main explorer pages.
+      </p>
       <div className="row">
         <AppButton to="/characters">Characters</AppButton>
         <AppButton variant="secondary" to="/episodes">
