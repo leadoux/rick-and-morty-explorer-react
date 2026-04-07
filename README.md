@@ -10,7 +10,7 @@ A React + TypeScript project that demonstrates:
 - UX polish (responsive layouts, loading/error/empty states, dark mode)
 - Basic testing quality with Vitest unit coverage for critical logic
 
-> Project status: this repository is approximately **60% complete**.
+> Project status: this repository is approximately **75% complete**.
 
 Live app: [https://rm-react.leadoux.dev](https://rm-react.leadoux.dev)
 
