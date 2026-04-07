@@ -27,7 +27,11 @@ export default function ComparePage() {
         </AppButton>
       </div>
 
-      {!canCompare ? <p className="hint">Add two {tab} to start comparing.</p> : null}
+      {!canCompare ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Add two {tab} to start comparing.
+        </p>
+      ) : null}
 
       {canCompare && tab === 'characters' ? (
         <div className="compare-grid">
