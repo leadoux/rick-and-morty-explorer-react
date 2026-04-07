@@ -2,8 +2,10 @@ import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import AppButton from '@/components/AppButton'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 import { handleImageError } from '@/lib/image'
 import { CHARACTER_DETAIL_QUERY } from '@/lib/queries'
+import { characterDetailGenericDescription } from '@/lib/seo'
 import { useCompareStore } from '@/stores/compare'
 import { useFavoritesStore } from '@/stores/favorites'
 import type { Character } from '@/types/entities'
@@ -29,6 +31,12 @@ export default function CharacterDetailPage() {
   })
 
   const character = data?.character
+  useDocumentMeta({
+    title: character?.name ? `${character.name} | Rick and Morty Explorer` : 'Character Details | Rick and Morty Explorer',
+    description: character
+      ? `Profile for ${character.name}: ${character.species}, ${character.status}. Episode list and links from Rick and Morty Explorer.`
+      : characterDetailGenericDescription,
+  })
 
   return (
     <section>

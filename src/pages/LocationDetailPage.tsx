@@ -2,8 +2,10 @@ import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import AppButton from '@/components/AppButton'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 import { handleImageError } from '@/lib/image'
 import { LOCATION_DETAIL_QUERY } from '@/lib/queries'
+import { locationDetailGenericDescription } from '@/lib/seo'
 import { useFavoritesStore } from '@/stores/favorites'
 
 type Resident = {
@@ -42,6 +44,12 @@ export default function LocationDetailPage() {
   })
 
   const location = data?.location
+  useDocumentMeta({
+    title: location?.name ? `${location.name} | Rick and Morty Explorer` : 'Location Details | Rick and Morty Explorer',
+    description: location
+      ? `Location ${location.name}: type, dimension, and residents from Rick and Morty Explorer.`
+      : locationDetailGenericDescription,
+  })
 
   return (
     <section>

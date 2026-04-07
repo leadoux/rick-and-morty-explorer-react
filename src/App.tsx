@@ -1,5 +1,7 @@
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { useMemo } from 'react'
+import { Navigate, Route, Routes, matchPath, useLocation } from 'react-router-dom'
 import AppHeader from '@/components/AppHeader'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 import CharacterDetailPage from '@/pages/CharacterDetailPage'
 import CharactersPage from '@/pages/CharactersPage'
 import ComparePage from '@/pages/ComparePage'
@@ -8,9 +10,83 @@ import EpisodesPage from '@/pages/EpisodesPage'
 import FavoritesPage from '@/pages/FavoritesPage'
 import LocationDetailPage from '@/pages/LocationDetailPage'
 import LocationsPage from '@/pages/LocationsPage'
+import {
+  characterDetailGenericDescription,
+  charactersPageDescription,
+  comparePageDescription,
+  defaultSiteDescription,
+  episodeDetailGenericDescription,
+  episodesPageDescription,
+  favoritesPageDescription,
+  locationDetailGenericDescription,
+  locationsPageDescription,
+  notFoundPageDescription,
+} from '@/lib/seo'
 import NotFoundPage from '@/pages/NotFoundPage'
 
 export default function App() {
+  const location = useLocation()
+
+  const routeMeta = useMemo(() => {
+    const { pathname } = location
+
+    if (pathname === '/characters' || pathname === '/') {
+      return {
+        title: 'Characters | Rick and Morty Explorer',
+        description: charactersPageDescription,
+      }
+    }
+    if (pathname === '/episodes') {
+      return {
+        title: 'Episodes | Rick and Morty Explorer',
+        description: episodesPageDescription,
+      }
+    }
+    if (pathname === '/locations') {
+      return {
+        title: 'Locations | Rick and Morty Explorer',
+        description: locationsPageDescription,
+      }
+    }
+    if (pathname === '/favorites') {
+      return {
+        title: 'Favorites | Rick and Morty Explorer',
+        description: favoritesPageDescription,
+      }
+    }
+    if (pathname === '/compare') {
+      return {
+        title: 'Compare | Rick and Morty Explorer',
+        description: comparePageDescription,
+      }
+    }
+    if (matchPath('/character/:id', pathname)) {
+      return {
+        title: 'Character Details | Rick and Morty Explorer',
+        description: characterDetailGenericDescription,
+      }
+    }
+    if (matchPath('/episode/:id', pathname)) {
+      return {
+        title: 'Episode Details | Rick and Morty Explorer',
+        description: episodeDetailGenericDescription,
+      }
+    }
+    if (matchPath('/location/:id', pathname)) {
+      return {
+        title: 'Location Details | Rick and Morty Explorer',
+        description: locationDetailGenericDescription,
+      }
+    }
+
+    return {
+      title: 'Page Not Found | Rick and Morty Explorer',
+      description: notFoundPageDescription,
+    }
+  }, [location])
+
+  useDocumentMeta(routeMeta ?? { title: 'Rick and Morty Explorer', description: defaultSiteDescription })
+
   return (
     <>
       <a className="skip-link" href="#main-content">

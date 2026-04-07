@@ -2,8 +2,10 @@ import { useEffect } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useQuery } from 'urql'
 import AppButton from '@/components/AppButton'
+import { useDocumentMeta } from '@/hooks/useDocumentMeta'
 import { handleImageError } from '@/lib/image'
 import { EPISODE_DETAIL_QUERY } from '@/lib/queries'
+import { episodeDetailGenericDescription } from '@/lib/seo'
 import { useCompareStore } from '@/stores/compare'
 import { useFavoritesStore } from '@/stores/favorites'
 
@@ -44,6 +46,14 @@ export default function EpisodeDetailPage() {
   })
 
   const episode = data?.episode
+  useDocumentMeta({
+    title: episode?.name
+      ? `${episode.episode} - ${episode.name} | Rick and Morty Explorer`
+      : 'Episode Details | Rick and Morty Explorer',
+    description: episode
+      ? `${episode.episode} ${episode.name}: air date, characters, and compare from Rick and Morty Explorer.`
+      : episodeDetailGenericDescription,
+  })
 
   return (
     <section>
