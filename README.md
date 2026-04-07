@@ -10,7 +10,7 @@ A React + TypeScript project that demonstrates:
 - UX polish (responsive layouts, loading/error/empty states, dark mode)
 - Basic testing quality with Vitest unit coverage for critical logic
 
-> Project status: this repository is approximately **75% complete**.
+> Project status: this repository is approximately **85% complete**.
 
 Live app: [https://rm-react.leadoux.dev](https://rm-react.leadoux.dev)
 
@@ -51,6 +51,18 @@ pnpm dev
 
 The dev server proxies GraphQL requests through `/graphql` to avoid browser CORS issues during local development.
 For deployed environments, you can optionally set `VITE_GRAPHQL_URL` to route through your own backend/proxy endpoint.
+If you change the API origin in production, update `connect-src` in both `netlify.toml` and `public/_headers` so requests are allowed by CSP.
+
+## Security Headers
+
+Netlify headers are configured in `netlify.toml`, with matching fallback entries in `public/_headers`:
+
+- `Content-Security-Policy`
+- `Content-Security-Policy-Report-Only` (Trusted Types rollout)
+- `Strict-Transport-Security`
+- `Cross-Origin-Opener-Policy`
+
+Keep these header definitions aligned when policy changes are made.
 
 ## Quality Checks
 
