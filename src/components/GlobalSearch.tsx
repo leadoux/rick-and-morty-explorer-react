@@ -114,6 +114,7 @@ export default function GlobalSearch() {
   useEffect(() => {
     const animationFrameId = requestAnimationFrame(() => {
       if (!shouldRun) {
+        setActiveOptionIndex(-1)
         if (searchValue.trim().length === 0) {
           closeDropdown()
         }

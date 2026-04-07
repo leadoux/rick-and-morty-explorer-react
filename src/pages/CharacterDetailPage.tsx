@@ -20,7 +20,7 @@ export default function CharacterDetailPage() {
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
   const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleCharacter = useCompareStore((state) => state.toggleCharacter)
-  const isCharacterCompared = useCompareStore((state) => state.isCharacterCompared)
+  const comparedCharacters = useCompareStore((state) => state.characters)
 
   useEffect(() => {
     hydrateFavorites()
@@ -32,7 +32,7 @@ export default function CharacterDetailPage() {
   })
 
   const character = data?.character
-  const isInCompare = character ? isCharacterCompared(character.id) : false
+  const isInCompare = character ? comparedCharacters.some((c) => c.id === character.id) : false
   const isCharacterFavorite = character
     ? favoriteItems.some((item) => item.id === character.id && item.kind === 'character')
     : false

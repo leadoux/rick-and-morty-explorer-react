@@ -32,7 +32,8 @@ export default function EpisodesPage() {
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
   const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleEpisode = useCompareStore((state) => state.toggleEpisode)
-  const isEpisodeCompared = useCompareStore((state) => state.isEpisodeCompared)
+  const comparedEpisodes = useCompareStore((state) => state.episodes)
+  const isEpisodeCompared = (episodeId: string) => comparedEpisodes.some((episode) => episode.id === episodeId)
 
   useEffect(() => {
     hydrateFavorites()

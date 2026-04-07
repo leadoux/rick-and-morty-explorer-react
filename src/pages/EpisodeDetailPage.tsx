@@ -35,7 +35,7 @@ export default function EpisodeDetailPage() {
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
   const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleEpisode = useCompareStore((state) => state.toggleEpisode)
-  const isEpisodeCompared = useCompareStore((state) => state.isEpisodeCompared)
+  const comparedEpisodes = useCompareStore((state) => state.episodes)
 
   useEffect(() => {
     hydrateFavorites()
@@ -47,7 +47,7 @@ export default function EpisodeDetailPage() {
   })
 
   const episode = data?.episode
-  const isInCompare = episode ? isEpisodeCompared(episode.id) : false
+  const isInCompare = episode ? comparedEpisodes.some((e) => e.id === episode.id) : false
   const isEpisodeFavorite = episode ? favoriteItems.some((item) => item.id === episode.id && item.kind === 'episode') : false
   const pageHeading = episode ? `${episode.episode} - ${episode.name}` : 'Episode details'
   useDocumentMeta({

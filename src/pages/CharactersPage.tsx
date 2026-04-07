@@ -38,7 +38,8 @@ export default function CharactersPage() {
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
   const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleCharacter = useCompareStore((state) => state.toggleCharacter)
-  const isCharacterCompared = useCompareStore((state) => state.isCharacterCompared)
+  const comparedCharacters = useCompareStore((state) => state.characters)
+  const isCharacterCompared = (id: string) => comparedCharacters.some((character) => character.id === id)
 
   useEffect(() => {
     hydrateFavorites()
