@@ -188,6 +188,11 @@ h3 {
   color: var(--accent);
 }
 
+.result-link.active {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
 .debounce-hint {
   margin-top: 0.3rem;
 }
