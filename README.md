@@ -37,13 +37,13 @@ The app keeps API querying close to page modules through reusable hooks and `urq
 ## Local Setup
 
 ```sh
-npm install
+pnpm install
 ```
 
 ## Development
 
 ```sh
-npm run dev
+pnpm dev
 ```
 
 The dev server proxies GraphQL requests through `/graphql` to avoid browser CORS issues during local development.
@@ -52,9 +52,9 @@ For deployed environments, you can optionally set `VITE_GRAPHQL_URL` to route th
 ## Quality Checks
 
 ```sh
-npm run lint
-npm run build
-npm run test:run
+pnpm lint
+pnpm build
+pnpm test:run
 ```
 
 ## Current Test Coverage
@@ -67,5 +67,5 @@ npm run test:run
 This is a static Vite application. Deploy the `dist/` output after:
 
 ```sh
-npm run build
+pnpm build
 ```
