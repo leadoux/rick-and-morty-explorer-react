@@ -92,8 +92,16 @@ export default function LocationDetailPage() {
           <div className="grid">
             {location.residents.map((resident) => (
               <article key={resident.id} className="card resident">
-                <Link className="image-link" to={`/character/${resident.id}`} aria-label={`Open ${resident.name}`}>
-                  <img src={resident.image} alt={resident.name} loading="lazy" decoding="async" onError={handleImageError} />
+                <Link className="image-link character-portrait-link" to={`/character/${resident.id}`} aria-label={`Open ${resident.name}`}>
+                  <img
+                    src={resident.image}
+                    alt={resident.name}
+                    width={300}
+                    height={300}
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
+                  />
                 </Link>
                 <h3>{resident.name}</h3>
                 <p className="meta">

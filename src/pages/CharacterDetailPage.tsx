@@ -60,7 +60,16 @@ export default function CharacterDetailPage() {
 
       {character ? (
         <article className="card detail">
-          <img src={character.image} alt={character.name} loading="eager" decoding="async" onError={handleImageError} />
+          <img
+            src={character.image}
+            alt={character.name}
+            className="detail-hero-image"
+            width={300}
+            height={300}
+            loading="eager"
+            decoding="async"
+            onError={handleImageError}
+          />
           <div>
             <p className="meta">Status: {character.status}</p>
             <p className="meta">Species: {character.species}</p>
