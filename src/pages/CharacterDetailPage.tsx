@@ -31,6 +31,7 @@ export default function CharacterDetailPage() {
   })
 
   const character = data?.character
+  const pageHeading = character?.name ?? 'Character details'
   useDocumentMeta({
     title: character?.name ? `${character.name} | Rick and Morty Explorer` : 'Character Details | Rick and Morty Explorer',
     description: character
@@ -40,6 +41,7 @@ export default function CharacterDetailPage() {
 
   return (
     <section>
+      <h1>{pageHeading}</h1>
       {fetching ? (
         <p className="hint" role="status" aria-live="polite" aria-atomic="true">
           Loading character...
@@ -55,7 +57,6 @@ export default function CharacterDetailPage() {
         <article className="card detail">
           <img src={character.image} alt={character.name} loading="eager" decoding="async" onError={handleImageError} />
           <div>
-            <h1>{character.name}</h1>
             <p className="meta">Status: {character.status}</p>
             <p className="meta">Species: {character.species}</p>
             <p className="meta">Gender: {character.gender}</p>

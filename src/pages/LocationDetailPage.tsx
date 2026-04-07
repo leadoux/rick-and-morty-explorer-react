@@ -44,6 +44,7 @@ export default function LocationDetailPage() {
   })
 
   const location = data?.location
+  const pageHeading = location?.name ?? 'Location details'
   useDocumentMeta({
     title: location?.name ? `${location.name} | Rick and Morty Explorer` : 'Location Details | Rick and Morty Explorer',
     description: location
@@ -53,6 +54,7 @@ export default function LocationDetailPage() {
 
   return (
     <section>
+      <h1>{pageHeading}</h1>
       {fetching ? (
         <p className="hint" role="status" aria-live="polite" aria-atomic="true">
           Loading location...
@@ -66,7 +68,6 @@ export default function LocationDetailPage() {
 
       {location ? (
         <article className="card">
-          <h1>{location.name}</h1>
           <p className="meta">Type: {location.type || 'Unknown'}</p>
           <p className="meta">Dimension: {location.dimension || 'Unknown'}</p>
           <p className="meta">Residents: {location.residents.length}</p>

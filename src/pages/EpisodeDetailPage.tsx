@@ -46,6 +46,7 @@ export default function EpisodeDetailPage() {
   })
 
   const episode = data?.episode
+  const pageHeading = episode ? `${episode.episode} - ${episode.name}` : 'Episode details'
   useDocumentMeta({
     title: episode?.name
       ? `${episode.episode} - ${episode.name} | Rick and Morty Explorer`
@@ -57,6 +58,7 @@ export default function EpisodeDetailPage() {
 
   return (
     <section>
+      <h1>{pageHeading}</h1>
       {fetching ? (
         <p className="hint" role="status" aria-live="polite" aria-atomic="true">
           Loading episode...
@@ -70,9 +72,6 @@ export default function EpisodeDetailPage() {
 
       {episode ? (
         <article className="card">
-          <h1>
-            {episode.episode} - {episode.name}
-          </h1>
           <p className="meta">Air date: {episode.air_date}</p>
           <p className="meta">Character count: {episode.characters.length}</p>
 
