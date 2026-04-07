@@ -53,8 +53,12 @@ export default function GlobalSearch() {
   const hasNoResults = isNoResultsError(error)
 
   return (
-    <div className="search-wrap">
+    <div className="search-wrap" role="search">
+      <label className="sr-only" htmlFor="global-search-input">
+        Search characters, episodes, and locations
+      </label>
       <input
+        id="global-search-input"
         className="input"
         type="search"
         value={searchValue}
@@ -64,7 +68,7 @@ export default function GlobalSearch() {
       />
 
       {shouldRun ? (
-        <div className="results card">
+        <div className="results card" aria-live="polite">
           {fetching ? <p className="hint">Searching...</p> : null}
           {!fetching && error && !hasNoResults ? <p className="error">Unable to run search right now.</p> : null}
           {!fetching && !error && hasResults ? (

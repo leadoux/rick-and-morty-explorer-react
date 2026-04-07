@@ -75,13 +75,25 @@ export default function EpisodesPage() {
       <p className="description">Browse episodes by name or season, then jump into details or comparison.</p>
 
       <div className="card filters">
+        <label className="sr-only" htmlFor="episodes-filter-name">
+          Filter episodes by name
+        </label>
         <input
+          id="episodes-filter-name"
           className="input"
           placeholder="Episode name"
           value={filters.name}
           onChange={(event) => setFilter('name', event.target.value)}
         />
-        <select className="input" value={filters.season} onChange={(event) => setFilter('season', event.target.value)}>
+        <label className="sr-only" htmlFor="episodes-filter-season">
+          Filter episodes by season
+        </label>
+        <select
+          id="episodes-filter-season"
+          className="input"
+          value={filters.season}
+          onChange={(event) => setFilter('season', event.target.value)}
+        >
           <option value="">All seasons</option>
           {Array.from({ length: 7 }, (_, index) => index + 1).map((option) => (
             <option key={option} value={String(option)}>

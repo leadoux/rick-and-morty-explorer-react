@@ -79,9 +79,31 @@ export default function LocationsPage() {
       <p className="description">Filter by location type and dimension for quick world discovery.</p>
 
       <div className="card filters">
-        <input className="input" placeholder="Location name" value={filters.name} onChange={(event) => setFilter('name', event.target.value)} />
-        <input className="input" placeholder="Type" value={filters.type} onChange={(event) => setFilter('type', event.target.value)} />
+        <label className="sr-only" htmlFor="locations-filter-name">
+          Filter locations by name
+        </label>
         <input
+          id="locations-filter-name"
+          className="input"
+          placeholder="Location name"
+          value={filters.name}
+          onChange={(event) => setFilter('name', event.target.value)}
+        />
+        <label className="sr-only" htmlFor="locations-filter-type">
+          Filter locations by type
+        </label>
+        <input
+          id="locations-filter-type"
+          className="input"
+          placeholder="Type"
+          value={filters.type}
+          onChange={(event) => setFilter('type', event.target.value)}
+        />
+        <label className="sr-only" htmlFor="locations-filter-dimension">
+          Filter locations by dimension
+        </label>
+        <input
+          id="locations-filter-dimension"
           className="input"
           placeholder="Dimension"
           value={filters.dimension}

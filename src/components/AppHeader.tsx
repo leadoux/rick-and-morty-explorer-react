@@ -15,12 +15,12 @@ export default function AppHeader() {
         <Link className="brand" to="/characters">
           Rick and Morty Explorer
         </Link>
-        <nav className="nav-links">
+        <nav className="nav-links" aria-label="Primary">
           <NavLink to="/characters">Characters</NavLink>
           <NavLink to="/episodes">Episodes</NavLink>
           <NavLink to="/locations">Locations</NavLink>
           <NavLink to="/favorites">Favorites</NavLink>
-          <NavLink to="/compare">
+          <NavLink to="/compare" aria-label={`Compare (${compareCount} selected items)`}>
             Compare <span className="badge">{compareCount}</span>
           </NavLink>
         </nav>
