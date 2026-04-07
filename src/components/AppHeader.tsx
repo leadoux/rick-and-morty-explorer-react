@@ -49,7 +49,12 @@ export default function AppHeader() {
         </nav>
         <div className="actions">
           <GlobalSearch />
-          <AppButton variant="secondary" onClick={toggleTheme}>
+          <AppButton
+            variant="secondary"
+            onClick={toggleTheme}
+            aria-pressed={isDarkMode}
+            aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
             {isDarkMode ? 'Light' : 'Dark'} mode
           </AppButton>
         </div>
