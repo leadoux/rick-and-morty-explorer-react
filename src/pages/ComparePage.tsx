@@ -13,6 +13,32 @@ export default function ComparePage() {
 
   const canCompare = tab === 'characters' ? canCompareCharacters : canCompareEpisodes
   const isCharactersTab = tab === 'characters'
+  const setActiveTab = (nextTab: 'characters' | 'episodes') => {
+    setTab(nextTab)
+    const nextTabId = nextTab === 'characters' ? 'compare-tab-characters' : 'compare-tab-episodes'
+    requestAnimationFrame(() => {
+      document.getElementById(nextTabId)?.focus()
+    })
+  }
+
+  const onTabKeyDown = (event: React.KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+      event.preventDefault()
+      setActiveTab(isCharactersTab ? 'episodes' : 'characters')
+      return
+    }
+
+    if (event.key === 'Home') {
+      event.preventDefault()
+      setActiveTab('characters')
+      return
+    }
+
+    if (event.key === 'End') {
+      event.preventDefault()
+      setActiveTab('episodes')
+    }
+  }
 
   return (
     <section>
@@ -27,7 +53,9 @@ export default function ComparePage() {
           aria-selected={isCharactersTab}
           aria-controls="compare-panel-characters"
           aria-pressed={isCharactersTab}
-          onClick={() => setTab('characters')}
+          tabIndex={isCharactersTab ? 0 : -1}
+          onClick={() => setActiveTab('characters')}
+          onKeyDown={onTabKeyDown}
         >
           Characters
         </AppButton>
@@ -38,7 +66,9 @@ export default function ComparePage() {
           aria-selected={!isCharactersTab}
           aria-controls="compare-panel-episodes"
           aria-pressed={!isCharactersTab}
-          onClick={() => setTab('episodes')}
+          tabIndex={!isCharactersTab ? 0 : -1}
+          onClick={() => setActiveTab('episodes')}
+          onKeyDown={onTabKeyDown}
         >
           Episodes
         </AppButton>
