@@ -45,14 +45,13 @@ export default function ComparePage() {
       <h1>Compare</h1>
       <p className="description">Pick two items from explorer pages and compare them side-by-side here.</p>
 
-      <div className="row" role="tablist" aria-label="Compare category">
+      <div className="row" role="tablist" aria-label="Compare category" aria-orientation="horizontal">
         <AppButton
           id="compare-tab-characters"
           variant="secondary"
           role="tab"
           aria-selected={isCharactersTab}
           aria-controls="compare-panel-characters"
-          aria-pressed={isCharactersTab}
           tabIndex={isCharactersTab ? 0 : -1}
           onClick={() => setActiveTab('characters')}
           onKeyDown={onTabKeyDown}
@@ -65,7 +64,6 @@ export default function ComparePage() {
           role="tab"
           aria-selected={!isCharactersTab}
           aria-controls="compare-panel-episodes"
-          aria-pressed={!isCharactersTab}
           tabIndex={!isCharactersTab ? 0 : -1}
           onClick={() => setActiveTab('episodes')}
           onKeyDown={onTabKeyDown}
