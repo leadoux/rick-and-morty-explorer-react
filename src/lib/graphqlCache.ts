@@ -16,14 +16,18 @@ const STORE_NAME = 'responses'
 const DB_VERSION = 1
 const isDev = import.meta.env.DEV
 
-const databasePromise = openDB(DB_NAME, DB_VERSION, {
-  upgrade(db) {
-    if (!db.objectStoreNames.contains(STORE_NAME)) {
-      const store = db.createObjectStore(STORE_NAME, { keyPath: 'key' })
-      store.createIndex('createdAt', 'createdAt')
-    }
-  },
-})
+const createDatabasePromise = () =>
+  openDB(DB_NAME, DB_VERSION, {
+    upgrade(db) {
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        const store = db.createObjectStore(STORE_NAME, { keyPath: 'key' })
+        store.createIndex('createdAt', 'createdAt')
+      }
+    },
+  })
+
+let databasePromise = createDatabasePromise()
+let pagehideListenerBound = false
 
 const toCacheResponse = (payload: CachedGraphqlPayload, state: 'HIT' | 'STALE') =>
   new Response(JSON.stringify(payload), {
@@ -44,6 +48,25 @@ const debugLog = (...args: unknown[]) => {
   if (!isDev) return
   console.debug('[graphql-cache]', ...args)
 }
+
+const bindBfCacheSafePagehide = () => {
+  if (pagehideListenerBound || typeof window === 'undefined') return
+  pagehideListenerBound = true
+
+  window.addEventListener('pagehide', () => {
+    void databasePromise
+      .then((db) => {
+        db.close()
+        // Recreate lazily for resumed/new sessions after pagehide.
+        databasePromise = createDatabasePromise()
+      })
+      .catch(() => {
+        databasePromise = createDatabasePromise()
+      })
+  })
+}
+
+bindBfCacheSafePagehide()
 
 const readCacheEntry = async (key: string) => {
   const db = await databasePromise

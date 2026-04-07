@@ -187,11 +187,13 @@ export default function CharactersPage() {
             const isCharacterFavorite = favoriteItems.some((item) => item.id === character.id && item.kind === 'character')
             return (
               <article key={character.id} className="card">
-                <Link className="image-link" to={`/character/${character.id}`} aria-label={`Open ${character.name}`}>
+                <Link className="image-link character-portrait-link" to={`/character/${character.id}`} aria-label={`Open ${character.name}`}>
                   <img
                     src={character.image}
                     alt={character.name}
                     className="avatar"
+                    width={300}
+                    height={300}
                     loading="lazy"
                     decoding="async"
                     onError={handleImageError}

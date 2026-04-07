@@ -37,8 +37,16 @@ export default function FavoritesPage() {
           {items.map((item) => (
             <article key={`${item.kind}:${item.id}`} className="card">
               {item.image ? (
-                <Link className="image-link" to={pathFor(item.kind, item.id)} aria-label={`Open ${item.name}`}>
-                  <img src={item.image} alt={item.name} loading="lazy" decoding="async" onError={handleImageError} />
+                <Link className="image-link character-portrait-link" to={pathFor(item.kind, item.id)} aria-label={`Open ${item.name}`}>
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    width={300}
+                    height={300}
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
+                  />
                 </Link>
               ) : null}
               <h3>{item.name}</h3>

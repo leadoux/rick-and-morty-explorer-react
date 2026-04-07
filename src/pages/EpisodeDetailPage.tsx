@@ -113,8 +113,16 @@ export default function EpisodeDetailPage() {
           <div className="grid">
             {episode.characters.map((character) => (
               <article key={character.id} className="card resident">
-                <Link className="image-link" to={`/character/${character.id}`} aria-label={`Open ${character.name}`}>
-                  <img src={character.image} alt={character.name} loading="lazy" decoding="async" onError={handleImageError} />
+                <Link className="image-link character-portrait-link" to={`/character/${character.id}`} aria-label={`Open ${character.name}`}>
+                  <img
+                    src={character.image}
+                    alt={character.name}
+                    width={300}
+                    height={300}
+                    loading="lazy"
+                    decoding="async"
+                    onError={handleImageError}
+                  />
                 </Link>
                 <h3>{character.name}</h3>
                 <p className="meta">
