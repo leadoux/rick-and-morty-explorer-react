@@ -12,17 +12,34 @@ export default function ComparePage() {
   const canCompareEpisodes = useCompareStore((state) => state.canCompareEpisodes)
 
   const canCompare = tab === 'characters' ? canCompareCharacters : canCompareEpisodes
+  const isCharactersTab = tab === 'characters'
 
   return (
     <section>
       <h1>Compare</h1>
       <p className="description">Pick two items from explorer pages and compare them side-by-side here.</p>
 
-      <div className="row">
-        <AppButton variant="secondary" disabled={tab === 'characters'} onClick={() => setTab('characters')}>
+      <div className="row" role="tablist" aria-label="Compare category">
+        <AppButton
+          id="compare-tab-characters"
+          variant="secondary"
+          role="tab"
+          aria-selected={isCharactersTab}
+          aria-controls="compare-panel-characters"
+          aria-pressed={isCharactersTab}
+          onClick={() => setTab('characters')}
+        >
           Characters
         </AppButton>
-        <AppButton variant="secondary" disabled={tab === 'episodes'} onClick={() => setTab('episodes')}>
+        <AppButton
+          id="compare-tab-episodes"
+          variant="secondary"
+          role="tab"
+          aria-selected={!isCharactersTab}
+          aria-controls="compare-panel-episodes"
+          aria-pressed={!isCharactersTab}
+          onClick={() => setTab('episodes')}
+        >
           Episodes
         </AppButton>
       </div>
@@ -34,7 +51,12 @@ export default function ComparePage() {
       ) : null}
 
       {canCompare && tab === 'characters' ? (
-        <div className="compare-grid">
+        <div
+          id="compare-panel-characters"
+          className="compare-grid"
+          role="tabpanel"
+          aria-labelledby="compare-tab-characters"
+        >
           <h2 className="section-heading">Character comparison ({characters.length})</h2>
           {characters.map((character) => (
             <article key={character.id} className="card">
@@ -50,7 +72,7 @@ export default function ComparePage() {
       ) : null}
 
       {canCompare && tab === 'episodes' ? (
-        <div className="compare-grid">
+        <div id="compare-panel-episodes" className="compare-grid" role="tabpanel" aria-labelledby="compare-tab-episodes">
           <h2 className="section-heading">Episode comparison ({episodes.length})</h2>
           {episodes.map((episode) => (
             <article key={episode.id} className="card">
