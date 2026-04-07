@@ -78,7 +78,8 @@ export default function LocationsPage() {
       <h1>Locations Explorer</h1>
       <p className="description">Filter by location type and dimension for quick world discovery.</p>
 
-      <div className="card filters">
+      <fieldset className="card filters">
+        <legend className="sr-only">Location filters</legend>
         <label className="sr-only" htmlFor="locations-filter-name">
           Filter locations by name
         </label>
@@ -86,6 +87,7 @@ export default function LocationsPage() {
           id="locations-filter-name"
           className="input"
           placeholder="Location name"
+          aria-describedby="locations-short-text-hint"
           value={filters.name}
           onChange={(event) => setFilter('name', event.target.value)}
         />
@@ -96,6 +98,7 @@ export default function LocationsPage() {
           id="locations-filter-type"
           className="input"
           placeholder="Type"
+          aria-describedby="locations-short-text-hint"
           value={filters.type}
           onChange={(event) => setFilter('type', event.target.value)}
         />
@@ -106,13 +109,18 @@ export default function LocationsPage() {
           id="locations-filter-dimension"
           className="input"
           placeholder="Dimension"
+          aria-describedby="locations-short-text-hint"
           value={filters.dimension}
           onChange={(event) => setFilter('dimension', event.target.value)}
         />
-      </div>
+      </fieldset>
 
       {fetching ? <p className="hint">Loading locations...</p> : null}
-      {!fetching && hasShortTextFilter ? <p className="hint">Type at least 2 letters for text filters.</p> : null}
+      {!fetching ? (
+        <p id="locations-short-text-hint" className={hasShortTextFilter ? 'hint' : 'sr-only'}>
+          Type at least 2 letters for text filters.
+        </p>
+      ) : null}
       {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? <p className="error">Unable to load locations.</p> : null}
       {!fetching && (!locations.length && (!error || hasNoResultsError)) ? (
         <p className="hint">No locations match these filters.</p>

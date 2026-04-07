@@ -74,7 +74,8 @@ export default function EpisodesPage() {
       <h1>Episodes Explorer</h1>
       <p className="description">Browse episodes by name or season, then jump into details or comparison.</p>
 
-      <div className="card filters">
+      <fieldset className="card filters">
+        <legend className="sr-only">Episode filters</legend>
         <label className="sr-only" htmlFor="episodes-filter-name">
           Filter episodes by name
         </label>
@@ -82,6 +83,7 @@ export default function EpisodesPage() {
           id="episodes-filter-name"
           className="input"
           placeholder="Episode name"
+          aria-describedby="episodes-short-text-hint"
           value={filters.name}
           onChange={(event) => setFilter('name', event.target.value)}
         />
@@ -101,10 +103,14 @@ export default function EpisodesPage() {
             </option>
           ))}
         </select>
-      </div>
+      </fieldset>
 
       {fetching ? <p className="hint">Loading episodes...</p> : null}
-      {!fetching && hasShortTextFilter ? <p className="hint">Type at least 2 letters for episode name.</p> : null}
+      {!fetching ? (
+        <p id="episodes-short-text-hint" className={hasShortTextFilter ? 'hint' : 'sr-only'}>
+          Type at least 2 letters for episode name.
+        </p>
+      ) : null}
       {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? <p className="error">Unable to load episode data.</p> : null}
       {!fetching && (!episodes.length && (!error || hasNoResultsError)) ? (
         <p className="hint">No episodes match these filters.</p>

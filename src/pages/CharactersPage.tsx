@@ -95,7 +95,8 @@ export default function CharactersPage() {
       <h1>Characters Explorer</h1>
       <p className="description">Browse every character with URL-synced filters and compare-ready cards.</p>
 
-      <div className="card filters">
+      <fieldset className="card filters">
+        <legend className="sr-only">Character filters</legend>
         <label className="sr-only" htmlFor="characters-filter-name">
           Filter characters by name
         </label>
@@ -103,6 +104,7 @@ export default function CharactersPage() {
           id="characters-filter-name"
           className="input"
           placeholder="Name"
+          aria-describedby="characters-short-text-hint"
           value={filters.name}
           onChange={(event) => setFilter('name', event.target.value)}
         />
@@ -127,6 +129,7 @@ export default function CharactersPage() {
           id="characters-filter-species"
           className="input"
           placeholder="Species"
+          aria-describedby="characters-short-text-hint"
           value={filters.species}
           onChange={(event) => setFilter('species', event.target.value)}
         />
@@ -148,10 +151,14 @@ export default function CharactersPage() {
         <AppButton variant="secondary" onClick={resetFilters}>
           Reset
         </AppButton>
-      </div>
+      </fieldset>
 
       {fetching ? <p className="hint">Loading characters...</p> : null}
-      {!fetching && hasShortTextFilter ? <p className="hint">Type at least 2 letters for name/species filters.</p> : null}
+      {!fetching ? (
+        <p id="characters-short-text-hint" className={hasShortTextFilter ? 'hint' : 'sr-only'}>
+          Type at least 2 letters for name/species filters.
+        </p>
+      ) : null}
       {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? (
         <p className="error">Unable to load character data right now.</p>
       ) : null}
