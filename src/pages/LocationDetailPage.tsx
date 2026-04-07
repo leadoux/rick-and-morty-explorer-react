@@ -32,7 +32,7 @@ export default function LocationDetailPage() {
   const { id = '' } = useParams<{ id: string }>()
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
 
   useEffect(() => {
     hydrateFavorites()
@@ -44,6 +44,10 @@ export default function LocationDetailPage() {
   })
 
   const location = data?.location
+  const pageHeading = location?.name ?? 'Location details'
+  const isLocationFavorite = location
+    ? favoriteItems.some((item) => item.id === location.id && item.kind === 'location')
+    : false
   useDocumentMeta({
     title: location?.name ? `${location.name} | Rick and Morty Explorer` : 'Location Details | Rick and Morty Explorer',
     description: location
@@ -53,12 +57,20 @@ export default function LocationDetailPage() {
 
   return (
     <section>
-      {fetching ? <p className="hint">Loading location...</p> : null}
-      {!fetching && error ? <p className="error">Unable to load this location.</p> : null}
+      <h1>{pageHeading}</h1>
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading location...
+        </p>
+      ) : null}
+      {!fetching && error ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load this location.
+        </p>
+      ) : null}
 
       {location ? (
         <article className="card">
-          <h1>{location.name}</h1>
           <p className="meta">Type: {location.type || 'Unknown'}</p>
           <p className="meta">Dimension: {location.dimension || 'Unknown'}</p>
           <p className="meta">Residents: {location.residents.length}</p>
@@ -73,7 +85,7 @@ export default function LocationDetailPage() {
               })
             }
           >
-            {isFavorite(location.id, 'location') ? 'Unfavorite' : 'Favorite'}
+            {isLocationFavorite ? 'Unfavorite' : 'Favorite'}
           </AppButton>
 
           <h2>Residents</h2>

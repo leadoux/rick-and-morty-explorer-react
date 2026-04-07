@@ -18,8 +18,9 @@ export default function CharacterDetailPage() {
   const { id = '' } = useParams<{ id: string }>()
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleCharacter = useCompareStore((state) => state.toggleCharacter)
+  const comparedCharacters = useCompareStore((state) => state.characters)
 
   useEffect(() => {
     hydrateFavorites()
@@ -31,6 +32,11 @@ export default function CharacterDetailPage() {
   })
 
   const character = data?.character
+  const isInCompare = character ? comparedCharacters.some((c) => c.id === character.id) : false
+  const isCharacterFavorite = character
+    ? favoriteItems.some((item) => item.id === character.id && item.kind === 'character')
+    : false
+  const pageHeading = character?.name ?? 'Character details'
   useDocumentMeta({
     title: character?.name ? `${character.name} | Rick and Morty Explorer` : 'Character Details | Rick and Morty Explorer',
     description: character
@@ -40,14 +46,22 @@ export default function CharacterDetailPage() {
 
   return (
     <section>
-      {fetching ? <p className="hint">Loading character...</p> : null}
-      {!fetching && error ? <p className="error">Unable to load this character.</p> : null}
+      <h1>{pageHeading}</h1>
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading character...
+        </p>
+      ) : null}
+      {!fetching && error ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load this character.
+        </p>
+      ) : null}
 
       {character ? (
         <article className="card detail">
           <img src={character.image} alt={character.name} loading="eager" decoding="async" onError={handleImageError} />
           <div>
-            <h1>{character.name}</h1>
             <p className="meta">Status: {character.status}</p>
             <p className="meta">Species: {character.species}</p>
             <p className="meta">Gender: {character.gender}</p>
@@ -67,10 +81,12 @@ export default function CharacterDetailPage() {
                   })
                 }
               >
-                {isFavorite(character.id, 'character') ? 'Unfavorite' : 'Favorite'}
+                {isCharacterFavorite ? 'Unfavorite' : 'Favorite'}
               </AppButton>
               <AppButton
                 variant="secondary"
+                aria-pressed={isInCompare}
+                aria-label={`${isInCompare ? 'Remove' : 'Add'} ${character.name} ${isInCompare ? 'from' : 'to'} compare`}
                 onClick={() =>
                   toggleCharacter({
                     id: character.id,
@@ -81,7 +97,7 @@ export default function CharacterDetailPage() {
                   })
                 }
               >
-                Compare
+                {isInCompare ? 'Compared' : 'Compare'}
               </AppButton>
             </div>
 

@@ -29,7 +29,7 @@ type LocationsQueryData = {
 export default function LocationsPage() {
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
 
   useEffect(() => {
     hydrateFavorites()
@@ -78,7 +78,8 @@ export default function LocationsPage() {
       <h1>Locations Explorer</h1>
       <p className="description">Filter by location type and dimension for quick world discovery.</p>
 
-      <div className="card filters">
+      <fieldset className="card filters">
+        <legend className="sr-only">Location filters</legend>
         <label className="sr-only" htmlFor="locations-filter-name">
           Filter locations by name
         </label>
@@ -86,6 +87,7 @@ export default function LocationsPage() {
           id="locations-filter-name"
           className="input"
           placeholder="Location name"
+          aria-describedby="locations-short-text-hint"
           value={filters.name}
           onChange={(event) => setFilter('name', event.target.value)}
         />
@@ -96,6 +98,7 @@ export default function LocationsPage() {
           id="locations-filter-type"
           className="input"
           placeholder="Type"
+          aria-describedby="locations-short-text-hint"
           value={filters.type}
           onChange={(event) => setFilter('type', event.target.value)}
         />
@@ -106,45 +109,66 @@ export default function LocationsPage() {
           id="locations-filter-dimension"
           className="input"
           placeholder="Dimension"
+          aria-describedby="locations-short-text-hint"
           value={filters.dimension}
           onChange={(event) => setFilter('dimension', event.target.value)}
         />
-      </div>
+      </fieldset>
 
-      {fetching ? <p className="hint">Loading locations...</p> : null}
-      {!fetching && hasShortTextFilter ? <p className="hint">Type at least 2 letters for text filters.</p> : null}
-      {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? <p className="error">Unable to load locations.</p> : null}
+      <p id="locations-short-text-hint" className="sr-only">
+        Type at least 2 letters for text filters.
+      </p>
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading locations...
+        </p>
+      ) : null}
+      {!fetching && hasShortTextFilter ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Type at least 2 letters for text filters.
+        </p>
+      ) : null}
+      {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load locations.
+        </p>
+      ) : null}
       {!fetching && (!locations.length && (!error || hasNoResultsError)) ? (
-        <p className="hint">No locations match these filters.</p>
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          No locations match these filters.
+        </p>
       ) : null}
 
       {!fetching && locations.length ? (
         <div className="grid">
           <h2 className="section-heading">Location results ({totalCount})</h2>
-          {locations.map((location) => (
-            <article key={location.id} className="card">
-              <h3>{location.name}</h3>
-              <p className="meta">Type: {location.type || 'Unknown'}</p>
-              <p className="meta">Dimension: {location.dimension || 'Unknown'}</p>
-              <p className="meta">Residents: {location.residents.length}</p>
-              <div className="row">
-                <AppButton to={`/location/${location.id}`}>Open</AppButton>
-                <AppButton
-                  variant="secondary"
-                  onClick={() =>
-                    toggleFavorite({
-                      id: location.id,
-                      kind: 'location',
-                      name: location.name,
-                      subtitle: `${location.type || 'Unknown'} - ${location.dimension || 'Unknown'}`,
-                    })
-                  }
-                >
-                  {isFavorite(location.id, 'location') ? 'Unfavorite' : 'Favorite'}
-                </AppButton>
-              </div>
-            </article>
-          ))}
+          {locations.map((location) => {
+            const isLocationFavorite = favoriteItems.some((item) => item.id === location.id && item.kind === 'location')
+            return (
+              <article key={location.id} className="card">
+                <h3>{location.name}</h3>
+                <p className="meta">Type: {location.type || 'Unknown'}</p>
+                <p className="meta">Dimension: {location.dimension || 'Unknown'}</p>
+                <p className="meta">Residents: {location.residents.length}</p>
+                <div className="row">
+                  <AppButton to={`/location/${location.id}`}>Open</AppButton>
+                  <AppButton
+                    variant="secondary"
+                    onClick={() =>
+                      toggleFavorite({
+                        id: location.id,
+                        kind: 'location',
+                        name: location.name,
+                        subtitle: `${location.type || 'Unknown'} - ${location.dimension || 'Unknown'}`,
+                      })
+                    }
+                  >
+                    {isLocationFavorite ? 'Unfavorite' : 'Favorite'}
+                  </AppButton>
+                </div>
+              </article>
+            )
+          })}
         </div>
       ) : null}
 

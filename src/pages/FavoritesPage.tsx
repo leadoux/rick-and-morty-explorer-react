@@ -25,7 +25,11 @@ export default function FavoritesPage() {
       <h1>Favorites</h1>
       <p className="description">Your saved picks are persisted locally and available after refresh.</p>
 
-      {!items.length ? <p className="hint">No favorites yet. Save some items from the explorers.</p> : null}
+      {!items.length ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          No favorites yet. Save some items from the explorers.
+        </p>
+      ) : null}
 
       {items.length ? (
         <div className="grid">

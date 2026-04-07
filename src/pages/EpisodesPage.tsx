@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import AppButton from '@/components/AppButton'
+import { useCallback, useEffect } from 'react'
 import PaginationControls from '@/components/PaginationControls'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { usePaginatedQuery } from '@/hooks/usePaginatedQuery'
@@ -30,8 +29,10 @@ type EpisodesQueryData = {
 export default function EpisodesPage() {
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleEpisode = useCompareStore((state) => state.toggleEpisode)
+  const comparedEpisodes = useCompareStore((state) => state.episodes)
+  const isEpisodeCompared = useCallback((episodeId: string) => comparedEpisodes.some((episode) => episode.id === episodeId), [comparedEpisodes])
 
   useEffect(() => {
     hydrateFavorites()
@@ -74,7 +75,8 @@ export default function EpisodesPage() {
       <h1>Episodes Explorer</h1>
       <p className="description">Browse episodes by name or season, then jump into details or comparison.</p>
 
-      <div className="card filters">
+      <fieldset className="card filters">
+        <legend className="sr-only">Episode filters</legend>
         <label className="sr-only" htmlFor="episodes-filter-name">
           Filter episodes by name
         </label>
@@ -82,6 +84,7 @@ export default function EpisodesPage() {
           id="episodes-filter-name"
           className="input"
           placeholder="Episode name"
+          aria-describedby="episodes-short-text-hint"
           value={filters.name}
           onChange={(event) => setFilter('name', event.target.value)}
         />
@@ -101,56 +104,79 @@ export default function EpisodesPage() {
             </option>
           ))}
         </select>
-      </div>
+      </fieldset>
 
-      {fetching ? <p className="hint">Loading episodes...</p> : null}
-      {!fetching && hasShortTextFilter ? <p className="hint">Type at least 2 letters for episode name.</p> : null}
-      {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? <p className="error">Unable to load episode data.</p> : null}
+      <p id="episodes-short-text-hint" className="sr-only">
+        Type at least 2 letters for episode name.
+      </p>
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading episodes...
+        </p>
+      ) : null}
+      {!fetching && hasShortTextFilter ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Type at least 2 letters for episode name.
+        </p>
+      ) : null}
+      {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load episode data.
+        </p>
+      ) : null}
       {!fetching && (!episodes.length && (!error || hasNoResultsError)) ? (
-        <p className="hint">No episodes match these filters.</p>
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          No episodes match these filters.
+        </p>
       ) : null}
 
       {!fetching && episodes.length ? (
         <div className="grid">
           <h2 className="section-heading">Episode results ({totalCount})</h2>
-          {episodes.map((episode) => (
-            <article key={episode.id} className="card">
-              <h3>
-                {episode.episode} - {episode.name}
-              </h3>
-              <p className="meta">Air date: {episode.air_date}</p>
-              <p className="meta">Characters: {episode.characters.length}</p>
-              <div className="row">
-                <AppButton to={`/episode/${episode.id}`}>Open</AppButton>
-                <AppButton
-                  variant="secondary"
-                  onClick={() =>
-                    toggleFavorite({
-                      id: episode.id,
-                      kind: 'episode',
-                      name: episode.name,
-                      subtitle: `${episode.episode} - ${episode.air_date}`,
-                    })
-                  }
-                >
-                  {isFavorite(episode.id, 'episode') ? 'Unfavorite' : 'Favorite'}
-                </AppButton>
-                <AppButton
-                  variant="secondary"
-                  onClick={() =>
-                    toggleEpisode({
-                      id: episode.id,
-                      name: episode.name,
-                      episode: episode.episode,
-                      air_date: episode.air_date,
-                    })
-                  }
-                >
-                  Compare
-                </AppButton>
-              </div>
-            </article>
-          ))}
+          {episodes.map((episode) => {
+            const inCompare = isEpisodeCompared(episode.id)
+            const isEpisodeFavorite = favoriteItems.some((item) => item.id === episode.id && item.kind === 'episode')
+            return (
+              <article key={episode.id} className="card">
+                <h3>
+                  {episode.episode} - {episode.name}
+                </h3>
+                <p className="meta">Air date: {episode.air_date}</p>
+                <p className="meta">Characters: {episode.characters.length}</p>
+                <div className="row">
+                  <AppButton to={`/episode/${episode.id}`}>Open</AppButton>
+                  <AppButton
+                    variant="secondary"
+                    onClick={() =>
+                      toggleFavorite({
+                        id: episode.id,
+                        kind: 'episode',
+                        name: episode.name,
+                        subtitle: `${episode.episode} - ${episode.air_date}`,
+                      })
+                    }
+                  >
+                    {isEpisodeFavorite ? 'Unfavorite' : 'Favorite'}
+                  </AppButton>
+                  <AppButton
+                    variant="secondary"
+                    aria-pressed={inCompare}
+                    aria-label={`${inCompare ? 'Remove' : 'Add'} ${episode.name} ${inCompare ? 'from' : 'to'} compare`}
+                    onClick={() =>
+                      toggleEpisode({
+                        id: episode.id,
+                        name: episode.name,
+                        episode: episode.episode,
+                        air_date: episode.air_date,
+                      })
+                    }
+                  >
+                    {inCompare ? 'Compared' : 'Compare'}
+                  </AppButton>
+                </div>
+              </article>
+            )
+          })}
         </div>
       ) : null}
 

@@ -33,8 +33,9 @@ export default function EpisodeDetailPage() {
   const { id = '' } = useParams<{ id: string }>()
   const hydrateFavorites = useFavoritesStore((state) => state.hydrate)
   const toggleFavorite = useFavoritesStore((state) => state.toggle)
-  const isFavorite = useFavoritesStore((state) => state.isFavorite)
+  const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleEpisode = useCompareStore((state) => state.toggleEpisode)
+  const comparedEpisodes = useCompareStore((state) => state.episodes)
 
   useEffect(() => {
     hydrateFavorites()
@@ -46,6 +47,9 @@ export default function EpisodeDetailPage() {
   })
 
   const episode = data?.episode
+  const isInCompare = episode ? comparedEpisodes.some((e) => e.id === episode.id) : false
+  const isEpisodeFavorite = episode ? favoriteItems.some((item) => item.id === episode.id && item.kind === 'episode') : false
+  const pageHeading = episode ? `${episode.episode} - ${episode.name}` : 'Episode details'
   useDocumentMeta({
     title: episode?.name
       ? `${episode.episode} - ${episode.name} | Rick and Morty Explorer`
@@ -57,14 +61,20 @@ export default function EpisodeDetailPage() {
 
   return (
     <section>
-      {fetching ? <p className="hint">Loading episode...</p> : null}
-      {!fetching && error ? <p className="error">Unable to load this episode.</p> : null}
+      <h1>{pageHeading}</h1>
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading episode...
+        </p>
+      ) : null}
+      {!fetching && error ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load this episode.
+        </p>
+      ) : null}
 
       {episode ? (
         <article className="card">
-          <h1>
-            {episode.episode} - {episode.name}
-          </h1>
           <p className="meta">Air date: {episode.air_date}</p>
           <p className="meta">Character count: {episode.characters.length}</p>
 
@@ -80,10 +90,12 @@ export default function EpisodeDetailPage() {
                 })
               }
             >
-              {isFavorite(episode.id, 'episode') ? 'Unfavorite' : 'Favorite'}
+              {isEpisodeFavorite ? 'Unfavorite' : 'Favorite'}
             </AppButton>
             <AppButton
               variant="secondary"
+              aria-pressed={isInCompare}
+              aria-label={`${isInCompare ? 'Remove' : 'Add'} ${episode.name} ${isInCompare ? 'from' : 'to'} compare`}
               onClick={() =>
                 toggleEpisode({
                   id: episode.id,
@@ -93,7 +105,7 @@ export default function EpisodeDetailPage() {
                 })
               }
             >
-              Compare
+              {isInCompare ? 'Compared' : 'Compare'}
             </AppButton>
           </div>
 

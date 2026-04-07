@@ -8,16 +8,26 @@ type PaginationControlsProps = {
 
 export default function PaginationControls({ page, totalPages, onPageChange }: PaginationControlsProps) {
   return (
-    <div className="pagination card">
-      <AppButton variant="secondary" disabled={page <= 1} onClick={() => onPageChange(page - 1)}>
+    <nav className="pagination card" aria-label="Pagination">
+      <AppButton
+        variant="secondary"
+        disabled={page <= 1}
+        aria-label="Go to previous page"
+        onClick={() => onPageChange(page - 1)}
+      >
         Previous
       </AppButton>
-      <p>
+      <p role="status" aria-live="polite" aria-atomic="true">
         Page {page} / {totalPages}
       </p>
-      <AppButton variant="secondary" disabled={page >= totalPages} onClick={() => onPageChange(page + 1)}>
+      <AppButton
+        variant="secondary"
+        disabled={page >= totalPages}
+        aria-label="Go to next page"
+        onClick={() => onPageChange(page + 1)}
+      >
         Next
       </AppButton>
-    </div>
+    </nav>
   )
 }

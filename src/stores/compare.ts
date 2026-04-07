@@ -20,6 +20,8 @@ type CompareState = {
   episodes: CompareEpisode[]
   canCompareCharacters: boolean
   canCompareEpisodes: boolean
+  isCharacterCompared: (id: string) => boolean
+  isEpisodeCompared: (id: string) => boolean
   toggleCharacter: (value: CompareCharacter) => void
   toggleEpisode: (value: CompareEpisode) => void
 }
@@ -29,6 +31,8 @@ export const useCompareStore = create<CompareState>((set, get) => ({
   episodes: [],
   canCompareCharacters: false,
   canCompareEpisodes: false,
+  isCharacterCompared: (id) => get().characters.some((item) => item.id === id),
+  isEpisodeCompared: (id) => get().episodes.some((item) => item.id === id),
   toggleCharacter: (value) => {
     const characters = [...get().characters]
     const index = characters.findIndex((item) => item.id === value.id)
