@@ -215,6 +215,7 @@ h3 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   border: none;
   border-radius: 0.55rem;
   padding: 0.45rem 0.7rem;
