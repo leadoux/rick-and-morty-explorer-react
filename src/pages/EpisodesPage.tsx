@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import AppButton from '@/components/AppButton'
+import { useCallback, useEffect } from 'react'
 import PaginationControls from '@/components/PaginationControls'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
 import { usePaginatedQuery } from '@/hooks/usePaginatedQuery'
@@ -33,7 +32,7 @@ export default function EpisodesPage() {
   const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleEpisode = useCompareStore((state) => state.toggleEpisode)
   const comparedEpisodes = useCompareStore((state) => state.episodes)
-  const isEpisodeCompared = (episodeId: string) => comparedEpisodes.some((episode) => episode.id === episodeId)
+  const isEpisodeCompared = useCallback((episodeId: string) => comparedEpisodes.some((episode) => episode.id === episodeId), [comparedEpisodes])
 
   useEffect(() => {
     hydrateFavorites()

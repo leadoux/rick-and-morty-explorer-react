@@ -1,5 +1,4 @@
-import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { useCallback, useEffect } from 'react'
 import AppButton from '@/components/AppButton'
 import PaginationControls from '@/components/PaginationControls'
 import { useDebouncedValue } from '@/hooks/useDebouncedValue'
@@ -39,7 +38,7 @@ export default function CharactersPage() {
   const favoriteItems = useFavoritesStore((state) => state.items)
   const toggleCharacter = useCompareStore((state) => state.toggleCharacter)
   const comparedCharacters = useCompareStore((state) => state.characters)
-  const isCharacterCompared = (id: string) => comparedCharacters.some((character) => character.id === id)
+  const isCharacterCompared = useCallback((id: string) => comparedCharacters.some((character) => character.id === id), [comparedCharacters])
 
   useEffect(() => {
     hydrateFavorites()
