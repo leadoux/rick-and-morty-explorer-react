@@ -153,17 +153,28 @@ export default function CharactersPage() {
         </AppButton>
       </fieldset>
 
-      {fetching ? <p className="hint">Loading characters...</p> : null}
-      {!fetching ? (
-        <p id="characters-short-text-hint" className={hasShortTextFilter ? 'hint' : 'sr-only'}>
+      <p id="characters-short-text-hint" className="sr-only">
+        Type at least 2 letters for name/species filters.
+      </p>
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading characters...
+        </p>
+      ) : null}
+      {!fetching && hasShortTextFilter ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
           Type at least 2 letters for name/species filters.
         </p>
       ) : null}
       {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? (
-        <p className="error">Unable to load character data right now.</p>
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load character data right now.
+        </p>
       ) : null}
       {!fetching && (!characters.length && (!error || hasNoResultsError)) ? (
-        <p className="hint">No characters match these filters.</p>
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          No characters match these filters.
+        </p>
       ) : null}
 
       {!fetching && characters.length ? (

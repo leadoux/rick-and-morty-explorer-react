@@ -115,15 +115,28 @@ export default function LocationsPage() {
         />
       </fieldset>
 
-      {fetching ? <p className="hint">Loading locations...</p> : null}
-      {!fetching ? (
-        <p id="locations-short-text-hint" className={hasShortTextFilter ? 'hint' : 'sr-only'}>
+      <p id="locations-short-text-hint" className="sr-only">
+        Type at least 2 letters for text filters.
+      </p>
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading locations...
+        </p>
+      ) : null}
+      {!fetching && hasShortTextFilter ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
           Type at least 2 letters for text filters.
         </p>
       ) : null}
-      {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? <p className="error">Unable to load locations.</p> : null}
+      {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load locations.
+        </p>
+      ) : null}
       {!fetching && (!locations.length && (!error || hasNoResultsError)) ? (
-        <p className="hint">No locations match these filters.</p>
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          No locations match these filters.
+        </p>
       ) : null}
 
       {!fetching && locations.length ? (

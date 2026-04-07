@@ -105,15 +105,28 @@ export default function EpisodesPage() {
         </select>
       </fieldset>
 
-      {fetching ? <p className="hint">Loading episodes...</p> : null}
-      {!fetching ? (
-        <p id="episodes-short-text-hint" className={hasShortTextFilter ? 'hint' : 'sr-only'}>
+      <p id="episodes-short-text-hint" className="sr-only">
+        Type at least 2 letters for episode name.
+      </p>
+      {fetching ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          Loading episodes...
+        </p>
+      ) : null}
+      {!fetching && hasShortTextFilter ? (
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
           Type at least 2 letters for episode name.
         </p>
       ) : null}
-      {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? <p className="error">Unable to load episode data.</p> : null}
+      {!fetching && !hasShortTextFilter && error && !hasNoResultsError ? (
+        <p className="error" role="status" aria-live="polite" aria-atomic="true">
+          Unable to load episode data.
+        </p>
+      ) : null}
       {!fetching && (!episodes.length && (!error || hasNoResultsError)) ? (
-        <p className="hint">No episodes match these filters.</p>
+        <p className="hint" role="status" aria-live="polite" aria-atomic="true">
+          No episodes match these filters.
+        </p>
       ) : null}
 
       {!fetching && episodes.length ? (
