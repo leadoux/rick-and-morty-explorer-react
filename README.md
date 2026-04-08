@@ -1,6 +1,6 @@
 # Rick and Morty Explorer
 
-[![CI](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/ci.yml/badge.svg)](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/ci.yml)
+[![Automation](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/copilot-swe-agent/copilot/badge.svg)](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/copilot-swe-agent/copilot)
 [![Live](https://img.shields.io/website?url=https%3A%2F%2Frm-react.leadoux.dev&label=live%20site)](https://rm-react.leadoux.dev)
 
 A React + TypeScript project that demonstrates:
@@ -76,6 +76,13 @@ pnpm test:run
 
 - Store behavior: favorites toggle/persistence and compare max-two logic.
 - GraphQL UX logic: no-results error detection handling.
+
+## Lighthouse report
+<img width="335" height="119" alt="image" src="https://github.com/user-attachments/assets/e46274fd-0df3-4db1-92b8-4eeebbe58fe6" />
+
+[Download the lighthouse report](https://github.com/user-attachments/files/26554255/rm-react.leadoux.dev-20260408T092037.html)
+
+
 
 ## Deployment
 
