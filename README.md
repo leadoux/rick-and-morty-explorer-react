@@ -3,14 +3,14 @@
 [![Automation](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/copilot-swe-agent/copilot/badge.svg)](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/copilot-swe-agent/copilot)
 [![Live](https://img.shields.io/website?url=https%3A%2F%2Frm-react.leadoux.dev&label=live%20site)](https://rm-react.leadoux.dev)
 
-A React + TypeScript project that demonstrates:
+A simple React + TypeScript project that demonstrates:
 
 - React fundamentals (components, hooks, routing, and centralized state)
 - GraphQL API integration against the [Rick and Morty API](https://rickandmortyapi.com/graphql)
 - UX polish (responsive layouts, loading/error/empty states, dark mode)
 - Basic testing quality with Vitest unit coverage for critical logic
 
-> Project status: this repository is approximately **85% complete**.
+> Project status: this repository is approximately **90% complete**.
 
 Live app: [https://rm-react.leadoux.dev](https://rm-react.leadoux.dev)
 
