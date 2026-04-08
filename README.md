@@ -1,6 +1,6 @@
 # Rick and Morty Explorer
 
-[![CI](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/ci.yml/badge.svg)](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/ci.yml)
+[![Automation](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/copilot-swe-agent/copilot/badge.svg)](https://github.com/leadoux/rick-and-morty-explorer-react/actions/workflows/copilot-swe-agent/copilot)
 [![Live](https://img.shields.io/website?url=https%3A%2F%2Frm-react.leadoux.dev&label=live%20site)](https://rm-react.leadoux.dev)
 
 A React + TypeScript project that demonstrates:
